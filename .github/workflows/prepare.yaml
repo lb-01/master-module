@@ -4,5 +4,7 @@ on: create
 jobs:
     test:
         runs-on: ubuntu-latest
-        shell: bash
-        run: echo "Success"
+        steps:
+            - name: test
+              shell: bash
+              run: echo "Success"
