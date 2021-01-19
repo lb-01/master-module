@@ -1,0 +1,8 @@
+name: Prepare Repository
+on: create
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        shell: bash
+        run: echo "Success"
