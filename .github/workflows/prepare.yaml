@@ -2,9 +2,235 @@ name: Prepare Repository
 on: create
 
 jobs:
-    test:
-        runs-on: ubuntu-latest
-        steps:
-            - name: test
-              shell: bash
-              run: echo "Success"
+  create-project-board:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Create project board'
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            core.startGroup('Retrieve organisation owner id');
+            const organisationOwnerIdQuery = 
+            `query OrganisationOwnerId($owner:String!, $name:String!) {
+              organization(login:$owner) {
+                name,
+                repository(name: $name) {
+                  id,
+                }
+              }
+            }`;
+            const organisationOwnerIdQueryVariables = {
+              owner: context.payload.repository.owner.login,
+              name: context.payload.repository.name
+            };
+            if (core.isDebug()) {
+              core.debug(`organisationOwnerIdQuery ${organisationOwnerIdQuery}`);
+              core.debug(`organisationOwnerIdQueryVariables ${JSON.stringify(organisationOwnerIdQueryVariables, null, 2)}`);
+            }
+            const organisationOwnerIdQueryResult = await github.graphql(
+              organisationOwnerIdQuery, 
+              organisationOwnerIdQueryVariables
+            )
+            core.info(JSON.stringify(organisationOwnerIdQueryResult, null, 2))
+            core.endGroup();
+
+            core.startGroup('Create project board');
+            const createProjectMutation =
+            `mutation CreateProject($ownerId:String!, $name:String!) {
+              createProject(input: { 
+                name: $name, 
+                ownerId: $ownerId, 
+                template: AUTOMATED_KANBAN_V2,
+                clientMutationId: "e0f64918-44f0-4f84-b634-6dc59732f3f8"
+              }) {
+                clientMutationId,
+                project {
+                  name
+                }
+              }
+            }`;
+            const createProjectMutationVariables = {
+              ownerId: organisationOwnerIdQueryResult.organization.repository.id,
+              name: 'Project Board'
+            };
+            if (core.isDebug()) {
+              core.debug(`createProjectMutation ${createProjectMutation}`);
+              core.debug(`createProjectMutationVariables ${JSON.stringify(createProjectMutationVariables, null, 2)}`);
+            }
+            const createResult = await github.graphql(
+              createProjectMutation, 
+              createProjectMutationVariables
+            );
+            core.info(JSON.stringify(createResult, null, 2));
+            core.endGroup();
+
+  delete-generated-cards:
+    runs-on: ubuntu-latest
+    needs: create-project-board
+    steps:
+      - name: 'Delete generated cards'
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            core.startGroup('Query generated cards');
+            const generatedCardsQuery = 
+            `query FetchGeneratedCardIds($owner:String!, $name:String!, $search:String!) {
+              organization(login:$owner) {
+                name,
+                repository(name: $name) {
+                  projects(first: 10, search: $search) {
+                    nodes {
+                      name,
+                      id,
+                      columns(first: 1) {
+                        nodes {
+                          cards {
+                            nodes {
+                              id
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }`;
+            const generatedCardsQueryVariables = {
+              owner: context.payload.repository.owner.login,
+              name: context.payload.repository.name,
+              search: 'board'
+            };
+            if (core.isDebug()) {
+              core.debug(`generatedCardsQuery ${generatedCardsQuery}`);
+              core.debug(`generatedCardsQueryVariables ${JSON.stringify(generatedCardsQueryVariables, null, 2)}`);
+            }
+            const generatedCardsQueryResult = await github.graphql(
+              generatedCardsQuery, 
+              generatedCardsQueryVariables
+            )
+            core.info(JSON.stringify(generatedCardsQueryResult, null, 2));
+
+            const projectNodes = generatedCardsQueryResult.organization.repository.projects.nodes[0];
+            const projectId = projectNodes.id;
+            const cardIds = projectNodes.columns.nodes[0].cards.nodes;
+            cardIds.forEach(async (obj) => {
+              const mutation =
+              `mutation DeleteCard($id: String!) {
+                deleteProjectCard(input: {
+                  cardId:$id
+                }) {
+                  deletedCardId
+                }
+              }`;
+              const parameters = {
+                id: obj.id
+              }
+              const result = await github.graphql(
+                mutation, 
+                parameters
+              );
+              core.startGroup(`Delete generated card with id ${obj.id}`);
+              core.info(JSON.stringify(obj, null, 2));
+              core.endGroup();
+            });
+            core.endGroup();
+
+  create-issues:
+    runs-on: ubuntu-latest
+    needs: delete-generated-cards
+    steps:
+      - name: 'Create issues'
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            core.startGroup('Fetch repository & project board id');
+            const IdQuery = 
+            `query FetchIds($owner:String!, $name:String!, $search:String!) {
+              organization(login:$owner) {
+                repository(name: $name) {
+                  id,
+                  projects(first: 10, search: $search) {
+                    nodes {
+                      id
+                    }
+                  }
+                }
+              }
+            }`;
+            const IdQueryVariables = {
+              owner: context.payload.repository.owner.login,
+              name: context.payload.repository.name,
+              search: 'board'
+            };
+            if (core.isDebug()) {
+              core.debug(`IdQuery ${IdQuery}`);
+              core.debug(`IdQueryVariables ${JSON.stringify(IdQueryVariables, null, 2)}`);
+            }
+            const IdResult = await github.graphql(
+              IdQuery, 
+              IdQueryVariables
+            );
+            core.info(JSON.stringify(IdResult, null, 2));
+            const repositoryId = IdResult.organization.repository.id;
+            const projectId = IdResult.organization.repository.projects.nodes[0].id;
+            core.endGroup();
+
+            core.startGroup('Create milestone');
+            const createMilestoneResult = await github.issues.createMilestone({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: 'Exercises'
+            });
+            core.info(JSON.stringify(createMilestoneResult, null, 2));
+            const milestoneId = createMilestoneResult.data.node_id;
+            core.endGroup();
+
+            const assigneeId = context.payload.sender.node_id
+            const titles = [
+              'Modify package.json and install locally',
+              'Create ci pipeline',
+              'Add prettier lint to ci',
+              'Add coverage report',
+              'Add caching',
+              'Make release on push master',
+              'Publish to GitHub Packages on publish release',
+            ];
+
+            titles.forEach(async (title) => {
+              const createIssuesMutation = 
+              `mutation CreateIssue($repositoryId: String!, $title: String!, $assigneeId: String!, $milestoneId: String!, $projectId: String!) {
+                createIssue(input: {
+                  repositoryId: $repositoryId,
+                  title: $title,
+                  assigneeIds: [$assigneeId],
+                  milestoneId: $milestoneId,
+                  projectIds: [$projectId]
+                }) {
+                  issue {
+                    id
+                  }
+                }
+              }`;
+              const createIssuesMutationVariables = {
+                repositoryId: repositoryId,
+                assigneeId: assigneeId,
+                projectId: projectId,
+                title: title,
+                milestoneId: milestoneId
+              };
+              if (core.isDebug()) {
+                core.debug(`IdQuery ${createIssuesMutation}`);
+                core.debug(`IdQueryVariables ${JSON.stringify(createIssuesMutationVariables, null, 2)}`);
+              }
+              const createIssuesResult = await github.graphql(
+                createIssuesMutation, 
+                createIssuesMutationVariables
+              );
+              core.startGroup(`Create Issue ${title}`);
+              core.info(JSON.stringify(createIssuesResult, null, 2));            
+              core.endGroup();
+            });
