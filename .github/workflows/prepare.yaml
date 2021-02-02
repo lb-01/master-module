@@ -263,7 +263,7 @@ jobs:
                 createIssuesMutation, 
                 createIssuesMutationVariables
               );
-              core.startGroup(`Create Issue ${title}`);
+              core.startGroup(`Create Issue ${issue.title}`);
               core.info(JSON.stringify(createIssuesResult, null, 2));            
               core.endGroup();
             });
