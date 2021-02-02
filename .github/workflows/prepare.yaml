@@ -4,6 +4,7 @@ on: create
 
 jobs:
   create-project-board:
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
       - name: 'Create project board'
@@ -67,6 +68,7 @@ jobs:
             core.endGroup();
 
   delete-generated-cards:
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     needs: create-project-board
     steps:
@@ -140,6 +142,7 @@ jobs:
             core.endGroup();
 
   create-issues:
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     needs: delete-generated-cards
     steps:
