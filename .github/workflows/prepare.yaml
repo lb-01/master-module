@@ -196,7 +196,7 @@ jobs:
             const assigneeId = context.payload.sender.node_id
             const issues = [
               {
-                title: '1 : Modify package.json and install locally',
+                title: '1: Modify package.json and install locally',
                 body: `
                 1. Create feature branch
                 2. Change name of project in package.json
@@ -206,28 +206,57 @@ jobs:
                 `
               },
               {
-                title: 'Create ci pipeline',
-                body: ``
+                title: '2: Create ci pipeline',
+                body: `
+                1. Create feature branch
+                2. Create ci pipeline action and push it to GitHub
+                3. Create pull request
+                4. Add lint check and push it to same pull request
+                5. Add test coverage and push it to same pull request
+                6. Add caching
+                5. Merge pull request
+                `
               },
               {
-                title: 'Add prettier lint to ci',
-                body: ``
+                title: '3: Add prettier lint to ci',
+                body: `See 2: Create ci pipeline`
               },
               {
-                title: 'Add coverage report',
-                body: ``
+                title: '4: Add coverage report',
+                body: `See 2: Create ci pipeline`
               },
               {
-                title: 'Add caching',
-                body: ``
+                title: '5: Add caching',
+                body: `See 2: Create ci pipeline`
               },
               {
-                title: 'Make release on push master',
-                body: ``
+                title: '6: Make release on push master',
+                body: `
+                1. Create GitHub secret
+                  1. Create personal access token
+                  2. Create GitHub secret
+                2. Create release workflow
+                  1. Move issue on project board
+                  2. Create local branch
+                  3. Set package version
+                  4. Commit version change
+                  5. Create Release workflow file
+                  6. Commit and push the branch to GitHub
+                  7. Create pull request
+                  8. Clean up your local repository
+                `
               },
               {
-                title: 'Publish to GitHub Packages on publish release',
-                body: ``
+                title: '7:Publish to GitHub Packages on publish release',
+                body: `
+                1. Create publish workflow
+                  1. Move issue on project board
+                  2. Create local branch
+                  3. Create Release workflow file
+                  4. Commit and push the branch to GitHub
+                  5. Create pull request
+                  6. Clean up your local repository
+                `
               }
             ];
 
