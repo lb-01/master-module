@@ -153,6 +153,7 @@ jobs:
                 `,
                 type: 'Feature'
               },
+              {
                 title: '[Feature]: 5. Add test coverage',
                 body: `
                   1. Add test coverage step to buld-test job in ci pipeline
