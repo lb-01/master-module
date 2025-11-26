@@ -121,7 +121,7 @@ jobs:
             core.startGroup('Create Issues');
             const issues = [
               {
-                title: '[Feature]: 1. Make project a scoped package',
+                title: '[Feature]: 1. Personalize project',
                 body: `
                 1. Create feature branch
                 2. Change name of project in package.json

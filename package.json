@@ -3,8 +3,15 @@
   "version": "0.0.1",
   "description": "NodeJS module",
   "main": "lib/index.js",
+  "type": "module",
   "scripts": {
-    "test": "jest"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "prettier:format": "prettier --write \"lib/**/*.js\"",
+    "prettier:check": "prettier --check \"lib/**/*.js\"",
+    "lint:check": "eslint \"lib/**/*.js\"",
+    "lint:fix": "eslint \"lib/**/*.js\" --fix"
   },
   "repository": {
     "type": "git",
@@ -20,6 +27,9 @@
   },
   "homepage": "https://github.com/lb-01/master-module#readme",
   "devDependencies": {
-    "jest": "^26.6.3"
+    "@vitest/coverage-v8": "^2.1.8",
+    "eslint": "^9.39.1",
+    "prettier": "^3.6.2",
+    "vitest": "^2.1.8"
   }
 }
