@@ -137,26 +137,38 @@ jobs:
                 1. Create feature branch
                 2. Create ci pipeline action and push it to GitHub
                 3. Create pull request
-                4. Add lint check and push it to same pull request
-                5. Add test coverage and push it to same pull request
-                6. Add caching
-                7. Merge pull request
                `,
                 type: 'Feature'
               },
               {
-                title: '[Feature]: 3. Add prettier and lint to ci',
-                body: `See 2: Create ci pipeline`,
+                title: '[Feature]: 3. Add Code Quality to pipeline',
+                body: `
+                1. Add Code Quality job to ci pipeline
+                2. Commit and push changes to same pull request
+                `,
                 type: 'Feature'
               },
               {
-                title: '[Feature]: 4. Add coverage report',
-                body: `See 2: Create ci pipeline`,
+                title: '[Feature]: 4. Add build and test',
+                body: `
+                  1. Add build and test job to ci pipeline
+                  2. Commit and push changes to same pull request
+                `,
+                type: 'Feature'
+              },
+                title: '[Feature]: 5. Add test coverage',
+                body: `
+                  1. Add test coverage step to buld-test job in ci pipeline
+                  2. Commit and push changes to same pull request
+                `,
                 type: 'Feature'
               },
               {
-                title: '[Feature]: 5. Add caching',
-                body: `See 2: Create ci pipeline`,
+                title: '[Feature]: 6. Add caching',
+                body: `
+                  1. Add caching step to ci pipeline
+                  2. Commit and push changes to same pull request
+                `,
                 type: 'Feature'
               },
               {
