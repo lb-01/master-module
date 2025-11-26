@@ -96,18 +96,33 @@ jobs:
           script: |
             core.startGroup('Create Milestone');
             const outputGetOrgOwnerResult = ${{ steps.get_org_owner_id.outputs.result }};
-            const repoName = outputGetOrgOwnerResult.organization.repository.name;
-            const ownerName = outputGetOrgOwnerResult.organization.name;
+            const repositoryId = outputGetOrgOwnerResult.organization.repository.id;
 
-            const milestoneTitle = '';
-            const milestoneDescription = 'Milestone for initial Calculator Release 1.0.';
-
-            const createMilestoneResult = await octokit.rest.issues.createMilestone({
-              owner: ownerName,
-              repo: repoName,
+            const createMilestoneMutation = `
+              mutation CreateMilestone($repositoryId: ID!, $title: String!, $description: String) {
+                createMilestone(input: {
+                  repositoryId: $repositoryId,
+                  title: $title,
+                  description: $description
+                }) {
+                  milestone {
+                    id
+                    number
+                    title
+                    description
+                  }
+                }
+              }
+            `;
+            const createMilestoneMutationVariables = {
+              repositoryId: repositoryId,
               title: "Calculator Release 1.0",
-              description: "Milestone for initial Calculator Release 1.0. Milestone created via REST api call."
-            });
+              description: "Milestone for initial Calculator Release 1.0. Milestone created via GraphQL mutation."
+            };
+            const createMilestoneResult = await github.graphql(
+              createMilestoneMutation,
+              createMilestoneMutationVariables
+            );
             core.info(`createMilestoneResult ${JSON.stringify(createMilestoneResult, null, 2)}`);
             core.endGroup();
             return createMilestoneResult;
