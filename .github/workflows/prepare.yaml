@@ -129,48 +129,48 @@ jobs:
                 type: 'Feature'
               },
               {
-                title: '[Feature]: 2. Create ci pipeline',
+                title: '[Feature]: 2. Create CI pipeline',
                 body: `
                   1. Create feature branch
-                  2. Create ci pipeline action and push it to GitHub
+                  2. Create CI pipeline action and push it to GitHub
                   3. Create pull request
                 `,
                 type: 'Feature'
               },
               {
-                title: '[Feature]: 3. Add Code Quality to pipeline',
+                title: '[Feature]: 3. Add Code Quality Checks to pipeline',
                 body: `
-                  1. Add Code Quality job to ci pipeline
+                  1. Add Code Quality job to CI pipeline
                   2. Commit and push changes to same pull request
                 `,
                 type: 'Feature'
               },
               {
-                title: '[Feature]: 4. Add build and test',
+                title: '[Feature]: 4. Add Build and Test',
                 body: `
-                  1. Add build and test job to ci pipeline
+                  1. Add build and test job to CI pipeline
                   2. Commit and push changes to same pull request
                 `,
                 type: 'Feature'
               },
               {
-                title: '[Feature]: 5. Add test coverage',
+                title: '[Feature]: 5. Add Test Coverage',
                 body: `
-                  1. Add test coverage step to buld-test job in ci pipeline
+                  1. Add test coverage step to build-test job in CI pipeline
                   2. Commit and push changes to same pull request
                 `,
                 type: 'Feature'
               },
               {
-                title: '[Feature]: 6. Add caching',
+                title: '[Feature]: 6. Add Caching',
                 body: `
-                  1. Add caching step to ci pipeline
+                  1. Add caching step to CI pipeline
                   2. Commit and push changes to same pull request
                 `,
                 type: 'Feature'
               },
               {
-                title: '[Task]: 6. Create Github Secret',
+                title: '[Task]: 7. Create GitHub Secret',
                 body: `
                   1. Create GitHub secret
                     1. Create personal access token
@@ -179,7 +179,7 @@ jobs:
                 type: 'Task'
               },
               {
-                title: '[Feature]: 7. Make release on push master',
+                title: '[Feature]: 8. Make release on push master',
                 body: `
                   1. Create release workflow
                     1. Move issue on project board
@@ -194,7 +194,7 @@ jobs:
                 type: 'Feature'
               },
               {
-                title: '[Feature]: 8. Publish to GitHub Packages on publish release',
+                title: '[Feature]: 9. Publish to GitHub Packages on publish release',
                 body: `
                   1. Create publish workflow
                     1. Move issue on project board
