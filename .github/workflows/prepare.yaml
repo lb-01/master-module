@@ -146,9 +146,9 @@ jobs:
                 type: 'Feature'
               },
               {
-                title: '[Feature]: 4. Add Build and Test',
+                title: '[Feature]: 4. Add Test',
                 body: `
-                  1. Add build and test job to CI pipeline
+                  1. Add test job to CI pipeline
                   2. Commit and push changes to same pull request
                 `,
                 type: 'Feature'
@@ -162,16 +162,7 @@ jobs:
                 type: 'Feature'
               },
               {
-                title: '[Task]: 6. Create GitHub Secret',
-                body: `
-                  1. Create GitHub secret
-                    1. Create personal access token
-                    2. Create GitHub secret
-                `,
-                type: 'Task'
-              },
-              {
-                title: '[Feature]: 7. Make release on push master',
+                title: '[Feature]: 6. Make release on push master',
                 body: `
                   1. Create release workflow
                     1. Move issue on project board
@@ -186,7 +177,7 @@ jobs:
                 type: 'Feature'
               },
               {
-                title: '[Feature]: 8. Publish to GitHub Packages on publish release',
+                title: '[Feature]: 7. Publish to GitHub Packages on publish release',
                 body: `
                   1. Create publish workflow
                     1. Move issue on project board
