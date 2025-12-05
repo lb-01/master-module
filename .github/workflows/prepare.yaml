@@ -165,14 +165,13 @@ jobs:
                 title: '[Feature]: 6. Make release on push master',
                 body: `
                   1. Create release workflow
-                    1. Move issue on project board
-                    2. Create local branch
-                    3. Set package version
-                    4. Commit version change
-                    5. Create Release workflow file
-                    6. Commit and push the branch to GitHub
-                    7. Create pull request
-                    8. Clean up your local repository
+                    1. Create local branch
+                    2. Set package version
+                    3. Commit version change
+                    4. Create Release workflow file
+                    5. Commit and push the branch to GitHub
+                    6. Create pull request
+                    7. Clean up your local repository
                 `,
                 type: 'Feature'
               },
@@ -180,12 +179,11 @@ jobs:
                 title: '[Feature]: 7. Publish to GitHub Packages on publish release',
                 body: `
                   1. Create publish workflow
-                    1. Move issue on project board
-                    2. Create local branch
-                    3. Create Release workflow file
-                    4. Commit and push the branch to GitHub
-                    5. Create pull request
-                    6. Clean up your local repository
+                    1. Create local branch
+                    2. Create Release workflow file
+                    3. Commit and push the branch to GitHub
+                    4. Create pull request
+                    5. Clean up your local repository
                 `,
                 type: 'Feature'
               }
